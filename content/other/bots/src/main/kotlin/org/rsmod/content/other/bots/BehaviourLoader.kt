@@ -29,6 +29,7 @@ object BehaviourLoader {
             "walk_near_home" -> WalkNearHome(node.int("radius", id))
             "wait" -> WaitTicks(node.int("min", id), node.int("max", id))
             "clear_inventory" -> ClearInventory
+            "give_item" -> GiveItem(node.text("item", id))
             "interact_loc" ->
                 InteractNearestLoc(
                     group = node.text("group", id),

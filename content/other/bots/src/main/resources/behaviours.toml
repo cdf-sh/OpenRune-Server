@@ -24,6 +24,7 @@ actions = [
 [mine_rocks]
 timeout = 400
 actions = [
+  { type = "give_item", item = "obj.bronze_pickaxe" },
   { type = "interact_loc", group = "content.rock", radius = 24, min = 60, max = 200 },
   { type = "clear_inventory" },
   { type = "wait", min = 5, max = 15 },

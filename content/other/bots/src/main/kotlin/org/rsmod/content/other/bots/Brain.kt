@@ -7,6 +7,7 @@ import jakarta.inject.Inject
 import kotlin.math.abs
 import kotlin.random.Random
 import net.rsprot.protocol.game.incoming.locs.OpLocV2
+import org.rsmod.api.invtx.invAdd
 import org.rsmod.api.invtx.invClear
 import org.rsmod.api.net.rsprot.handlers.OpLocHandler
 import org.rsmod.api.player.protect.clearPendingAction
@@ -68,6 +69,9 @@ interface BotWorld {
     fun stop(bot: BotAgent)
 
     fun clearInventory(bot: BotAgent)
+
+    /** Adds one [item] (e.g. "obj.bronze_pickaxe") to the bot's inventory. */
+    fun giveItem(bot: BotAgent, item: String)
 }
 
 class OpenRuneBotWorld
@@ -124,6 +128,10 @@ constructor(
 
     override fun clearInventory(bot: BotAgent) {
         bot.player.invClear(bot.player.inv)
+    }
+
+    override fun giveItem(bot: BotAgent, item: String) {
+        bot.player.invAdd(bot.player.inv, item)
     }
 
     private companion object {
@@ -304,6 +312,14 @@ class InteractNearestLoc(
 object ClearInventory : BotAction {
     override fun start(bot: BotAgent, world: BotWorld, frame: BehaviourFrame): BehaviourState {
         world.clearInventory(bot)
+        return BehaviourState.Success
+    }
+}
+
+/** Hands the bot one [item] so the skill script finds the tool it needs. */
+class GiveItem(private val item: String) : BotAction {
+    override fun start(bot: BotAgent, world: BotWorld, frame: BehaviourFrame): BehaviourState {
+        world.giveItem(bot, item)
         return BehaviourState.Success
     }
 }
