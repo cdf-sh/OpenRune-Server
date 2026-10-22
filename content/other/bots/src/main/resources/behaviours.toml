@@ -1,0 +1,30 @@
+[wander_close]
+actions = [
+  { type = "walk_near_home", radius = 6 },
+  { type = "wait", min = 8, max = 40 },
+]
+
+[wander_far]
+actions = [
+  { type = "walk_near_home", radius = 20 },
+  { type = "wait", min = 20, max = 60 },
+]
+
+[stand_around]
+actions = [{ type = "wait", min = 30, max = 100 }]
+
+[chop_trees]
+timeout = 400
+actions = [
+  { type = "interact_loc", group = "content.tree", radius = 24, min = 60, max = 200 },
+  { type = "clear_inventory" },
+  { type = "wait", min = 5, max = 15 },
+]
+
+[mine_rocks]
+timeout = 400
+actions = [
+  { type = "interact_loc", group = "content.rock", radius = 24, min = 60, max = 200 },
+  { type = "clear_inventory" },
+  { type = "wait", min = 5, max = 15 },
+]
