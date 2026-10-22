@@ -15,6 +15,7 @@ import org.rsmod.api.registry.loc.LocRegistry
 import org.rsmod.events.EventBus
 import org.rsmod.game.entity.Player
 import org.rsmod.game.loc.LocInfo
+import org.rsmod.game.movement.RouteRequestCoord
 import org.rsmod.map.CoordGrid
 import org.rsmod.map.zone.ZoneKey
 
@@ -83,10 +84,16 @@ constructor(
 ) : BotWorld {
     private val groups = HashMap<String, Int>()
 
-    override fun walk(bot: BotAgent, dest: CoordGrid) = bot.player.walk(dest)
+    /** Requests a path like a minimap click would; setting `routeDestination` directly skips pathfinding. */
+    override fun walk(bot: BotAgent, dest: CoordGrid) {
+        bot.player.routeDestination.clear()
+        bot.player.routeRequest = RouteRequestCoord(dest, clientRequest = true)
+    }
 
     override fun settled(bot: BotAgent): Boolean =
-        bot.player.routeDestination.isEmpty() && !bot.player.hasMovedThisCycle
+        bot.player.routeRequest == null &&
+            bot.player.routeDestination.isEmpty() &&
+            !bot.player.hasMovedThisCycle
 
     override fun findLoc(bot: BotAgent, group: String, radius: Int): LocInfo? {
         val groupId = groups.getOrPut(group) { group.asRSCM() }
@@ -123,6 +130,7 @@ constructor(
 
     override fun stop(bot: BotAgent) {
         bot.player.clearPendingAction(eventBus)
+        bot.player.routeRequest = null
         bot.player.routeDestination.clear()
     }
 
